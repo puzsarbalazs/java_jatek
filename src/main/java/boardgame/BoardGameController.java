@@ -2,7 +2,12 @@ package boardgame;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -13,6 +18,8 @@ import javafx.scene.shape.Circle;
 import boardgame.model.BoardGameModel;
 import boardgame.model.Square;
 
+import java.util.Optional;
+
 public class BoardGameController {
 
     @FXML
@@ -22,6 +29,11 @@ public class BoardGameController {
 
     @FXML
     private void initialize() {
+        populateGrid();
+        registerHandlersAndListeners();
+    }
+
+    private void populateGrid() {
         for (var i = 0; i < board.getRowCount(); i++) {
             for (var j = 0; j < board.getColumnCount(); j++) {
                 var square = createSquare(i, j);
@@ -29,6 +41,9 @@ public class BoardGameController {
             }
         }
     }
+
+    //próba
+    private BooleanProperty gameOver = new SimpleBooleanProperty();
 
     private StackPane createSquare(int i, int j) {
         var square = new StackPane();
@@ -62,6 +77,45 @@ public class BoardGameController {
         return square;
     }
 
+    //próba
+    private void registerHandlersAndListeners() {
+        gameOver.addListener(this::handleGameOver);
+    }
+
+    //ez is próba
+    private void handleGameOver(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+        if (newValue) {
+            var alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Game Over");
+            alert.setContentText("Congratulations, you have solved the puzzle!");
+            alert.showAndWait();
+            resetGame();
+        }
+    }
+
+    //ez is
+    private void resetGame() {
+        model = new BoardGameModel();
+        clearGrid();
+        board.getChildren().clear();
+        populateGrid();
+    }
+
+    private static Optional<Node> getGridNodeAtPosition(GridPane gridPane, int row, int col) {
+        return gridPane.getChildren().stream()
+                .filter(child -> GridPane.getRowIndex(child) == row && GridPane.getColumnIndex(child) == col)
+                .findFirst();
+    }
+
+    private void clearGrid() {
+        for (var row = 0; row < 3; row++) {
+            for (var col = 0; col < 3; col++) {
+                getGridNodeAtPosition(board, row, col)
+                        .ifPresent(node -> ((StackPane) node).getChildren().clear());
+            }
+        }
+    }
+
     @FXML
     private void handleMouseClick(MouseEvent event) {
         var square = (StackPane) event.getSource();
@@ -69,6 +123,7 @@ public class BoardGameController {
         var col = GridPane.getColumnIndex(square);
         System.out.printf("Click on square (%d,%d)%n", row, col);
         model.move(row, col);
+        gameOver.set(model.isEnd());  //próba
     }
 
 }

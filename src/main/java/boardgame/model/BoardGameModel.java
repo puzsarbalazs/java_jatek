@@ -2,6 +2,7 @@ package boardgame.model;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.scene.control.Alert;
 
 import static boardgame.model.Square.NONE;
 
@@ -47,25 +48,60 @@ public class BoardGameModel {
     public void move(int i, int j) {
         if (board[i][j].get()==NONE) {
             board[i][j].set(nextPlayer()==1 ? Square.RED : Square.BLUE);
-            System.out.println(winner());
+            System.out.println(winner()); //ellenőrzés
+            System.out.println(isEnd()); //ellenőrzés
+            //ezt a controllerbe kéne átteni, bind-olni az isEndhez
+
+            /*if (isEnd()) {
+                var alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Game Over");
+                alert.setContentText("Congratulations, you have solved the puzzle!");
+                alert.showAndWait();
+                //resetGame();
+            }
+
+             */
         } else {
             System.out.println("Incorrect move");
         }
     }
 
-    public int nextPlayer() {
-        int moveCounter = 0;
+    /*rest game, ennek is a controllerben lesz majd a helye
+    public void resetGame() {
+        for (var i = 0; i < BOARD_SIZE; i++) {
+            for (var j = 0; j < BOARD_SIZE; j++) {
+                board[i][j] = new ReadOnlyObjectWrapper<Square>(NONE);
+            }
+        }
+    }
+
+     */
+
+    public int moveCounter(ReadOnlyObjectWrapper[][] board) {
+        int movesDid = 0;
         for (var i = 0; i < BOARD_SIZE; i++) {
             for (var j = 0; j < BOARD_SIZE; j++) {
                 if (board[i][j].get() != NONE) {
-                    moveCounter++;
+                    movesDid++;
                 }
             }
         }
-        if (moveCounter % 2 == 0) {
+        return movesDid;
+    }
+
+    public int nextPlayer() {
+        if (moveCounter(board) % 2 == 0) {
             return 1;
         } else {
             return 2;
+        }
+    }
+
+    public boolean isEnd() {
+        if (winner() != null ||  moveCounter(board) == 9) {
+            return true;
+        } else {
+            return false;
         }
     }
 
