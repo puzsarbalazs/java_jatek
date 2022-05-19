@@ -48,8 +48,8 @@ public class BoardGameModel {
     public void move(int i, int j) {
         if (board[i][j].get()==NONE) {
             board[i][j].set(nextPlayer()==1 ? Square.RED : Square.BLUE);
-            System.out.println(winner()); //ellenőrzés
-            System.out.println(isEnd()); //ellenőrzés
+            //System.out.println(winner()); //ezek elvileg logolva vannak
+            //System.out.println(isEnd()); //ellenőrzés
             //ezt a controllerbe kéne átteni, bind-olni az isEndhez
 
             /*if (isEnd()) {

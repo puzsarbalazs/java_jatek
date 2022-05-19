@@ -1,13 +1,22 @@
 package boardgame;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -17,7 +26,10 @@ import javafx.scene.shape.Circle;
 
 import boardgame.model.BoardGameModel;
 import boardgame.model.Square;
+import javafx.stage.Stage;
+import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class BoardGameController {
@@ -31,6 +43,7 @@ public class BoardGameController {
     private void initialize() {
         populateGrid();
         registerHandlersAndListeners();
+        registerKeyEventHandler();
     }
 
     private void populateGrid() {
@@ -85,9 +98,11 @@ public class BoardGameController {
     //ez is próba
     private void handleGameOver(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
         if (newValue) {
+            var text = model.winner()!=null ? model.winner().toString()+" won the game!" : "It's a draw";
+            Logger.info(text);
             var alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Game Over");
-            alert.setContentText("Congratulations, you have solved the puzzle!");
+            alert.setContentText(text);
             alert.showAndWait();
             resetGame();
         }
@@ -99,6 +114,8 @@ public class BoardGameController {
         clearGrid();
         board.getChildren().clear();
         populateGrid();
+        //as
+        Logger.info("Restarting the the game");
     }
 
     private static Optional<Node> getGridNodeAtPosition(GridPane gridPane, int row, int col) {
@@ -116,14 +133,42 @@ public class BoardGameController {
         }
     }
 
+    //gombok próba
+    private void registerKeyEventHandler() {
+        KeyCombination restartKeyCombination = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
+        KeyCombination quitKeyCombination = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
+        Platform.runLater(() -> board.getScene().setOnKeyPressed(
+                keyEvent -> {
+                    if (restartKeyCombination.match(keyEvent)) {
+                        //Logger.debug("Restarting game...");
+                        resetGame();
+                    } else if (quitKeyCombination.match(keyEvent)) {
+                        //Logger.debug("Exiting...");
+                        Platform.exit();
+                    }
+                }
+        ));
+    }
+
     @FXML
     private void handleMouseClick(MouseEvent event) {
         var square = (StackPane) event.getSource();
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
-        System.out.printf("Click on square (%d,%d)%n", row, col);
+        Logger.debug("Click on square ({}, {})", row, col);
         model.move(row, col);
+        Logger.debug(model.toString());
         gameOver.set(model.isEnd());  //próba
+    }
+
+
+    @FXML
+    private void BackToMenu(ActionEvent event) throws IOException {
+        Logger.debug("Menu button is pressed");
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/menu.fxml"));
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
 }
