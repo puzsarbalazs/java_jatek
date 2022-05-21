@@ -1,5 +1,7 @@
 package boardgame;
 
+import boardgame.json.GameResult;
+import boardgame.json.GameResultRepository;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
@@ -30,6 +32,8 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 public class BoardGameController {
@@ -38,6 +42,8 @@ public class BoardGameController {
     private GridPane board;
 
     private BoardGameModel model = new BoardGameModel();
+
+    private GameResultRepository gameResultRepository = new GameResultRepository();
 
     @FXML
     private void initialize() {
@@ -104,6 +110,16 @@ public class BoardGameController {
             alert.setHeaderText("Game Over");
             alert.setContentText(text);
             alert.showAndWait();
+            GameResult gameResult = GameResult.builder()
+                    .created(ZonedDateTime.now())
+                    .winner(model.winner().toString())
+                    .steps(model.moveCounter()).build();
+            gameResultRepository.addOne(gameResult);
+            try {
+                gameResultRepository.saveToFile(gameResultRepository.getLeaderboardFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             resetGame();
         }
     }

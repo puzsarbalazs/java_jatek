@@ -22,4 +22,13 @@ public class MenuController {
         stage.show();
     }
 
+    @FXML
+    private void switchToHighScores(ActionEvent event) throws IOException {
+        Logger.debug("Start the game button is pressed");
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/highscores.fxml"));
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
 }

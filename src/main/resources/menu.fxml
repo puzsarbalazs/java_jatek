@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: aliceblue; -fx-font-size: 18;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardgame.MenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: aliceblue; -fx-font-size: 18;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardgame.MenuController">
     <center>
         <Label text="Welcome" BorderPane.alignment="CENTER" />
     </center>
     <bottom>
-        <Button fx:id="next" mnemonicParsing="false" onAction="#switchScene" text="Start Game" BorderPane.alignment="CENTER" />
+      <HBox>
+         <children>
+              <Button fx:id="next" mnemonicParsing="false" onAction="#switchScene" text="Start Game" BorderPane.alignment="CENTER" />
+             <Button fx:id="highscores" mnemonicParsing="false" onAction="#switchToHighScores" text="Highscores" BorderPane.alignment="CENTER" />
+         </children>
+      </HBox>
     </bottom>
+    
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>

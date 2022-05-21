@@ -77,7 +77,7 @@ public class BoardGameModel {
 
      */
 
-    public int moveCounter(ReadOnlyObjectWrapper[][] board) {
+    public int moveCounter() {
         int movesDid = 0;
         for (var i = 0; i < BOARD_SIZE; i++) {
             for (var j = 0; j < BOARD_SIZE; j++) {
@@ -90,7 +90,7 @@ public class BoardGameModel {
     }
 
     public int nextPlayer() {
-        if (moveCounter(board) % 2 == 0) {
+        if (moveCounter() % 2 == 0) {
             return 1;
         } else {
             return 2;
@@ -98,7 +98,7 @@ public class BoardGameModel {
     }
 
     public boolean isEnd() {
-        if (winner() != null ||  moveCounter(board) == 9) {
+        if (winner() != null ||  moveCounter() == 9) {
             return true;
         } else {
             return false;
