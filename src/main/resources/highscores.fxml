@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardgame.HighScoreController">
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardgame.controller.HighScoreController">
     <children>
         <TableView fx:id="highScoreTable" editable="true" layoutX="25.0" layoutY="74.0" prefHeight="550.0" prefWidth="650.0">
             <columns>
@@ -18,7 +22,6 @@
                 <Font size="22.0" />
             </font>
         </Label>
-        <Button layoutX="211.0" layoutY="635.0" mnemonicParsing="false"  prefHeight="51.0" prefWidth="122.0" onAction="#BackToMenu" text="Back to menu" />
-        <Button layoutX="388.0" layoutY="635.0" mnemonicParsing="false"  prefHeight="51.0" prefWidth="122.0" text="Save scoreboard" />
+        <Button layoutX="269.0" layoutY="635.0" mnemonicParsing="false" onAction="#BackToMenu" prefHeight="51.0" prefWidth="122.0" text="Back to menu" />
     </children>
 </Pane>

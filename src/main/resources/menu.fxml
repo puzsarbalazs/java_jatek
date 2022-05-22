@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -9,17 +10,38 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: aliceblue; -fx-font-size: 18;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardgame.MenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: aliceblue; -fx-font-size: 18;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardgame.controller.MenuController">
     <center>
-        <Label text="Welcome" BorderPane.alignment="CENTER" />
+      <AnchorPane>
+         <children>
+              <Label layoutX="66.0" layoutY="69.0" text="Welcome to the Tic Tac Toe game" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="27.0" />
+               </font>
+            </Label>
+            <Label layoutX="209.0" layoutY="143.0" text="Created by Puzsár Balázs">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
     </center>
     <bottom>
-      <HBox>
+      <VBox alignment="CENTER">
          <children>
-              <Button fx:id="next" mnemonicParsing="false" onAction="#switchScene" text="Start Game" BorderPane.alignment="CENTER" />
-             <Button fx:id="highscores" mnemonicParsing="false" onAction="#switchToHighScores" text="Highscores" BorderPane.alignment="CENTER" />
+              <Button fx:id="next" mnemonicParsing="false" onAction="#switchScene" text="Start Game" BorderPane.alignment="CENTER">
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </Button>
+             <Button fx:id="highscores" mnemonicParsing="false" onAction="#switchToHighScores" text="Highscores" BorderPane.alignment="CENTER">
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </Button>
          </children>
-      </HBox>
+      </VBox>
     </bottom>
     
     <padding>

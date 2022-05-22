@@ -3,9 +3,7 @@ package boardgame.json;
 import utils.FileSystemRepository;
 
 import java.io.File;
-import java.time.ZonedDateTime;
-import java.util.Comparator;
-import java.util.List;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -16,8 +14,14 @@ public class GameResultRepository extends FileSystemRepository<GameResult> {
     private static final File LEADERBOARD_FILE = new File(System.getProperty("user.home")
             +File.separator+"leaderboard.json");
 
+
     public GameResultRepository() {
         super(GameResult.class);
+        try {
+            this.loadFromFile(LEADERBOARD_FILE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

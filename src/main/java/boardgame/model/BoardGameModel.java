@@ -3,16 +3,26 @@ package boardgame.model;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.scene.control.Alert;
+import org.tinylog.Logger;
 
 import static boardgame.model.Square.NONE;
+import static boardgame.model.Square.RED;
 
+/**
+ * Class representing the model of the game.
+ */
 public class BoardGameModel {
 
-    //public static int BOARD_SIZE = 5;
-    public static int BOARD_SIZE = 3;
+    /**
+     * The size of the board.
+     */
+    public static int BOARD_SIZE = 5;
 
     private ReadOnlyObjectWrapper<Square>[][] board = new ReadOnlyObjectWrapper[BOARD_SIZE][BOARD_SIZE];
 
+    /**
+     * Creates the initial board game model, every position has {@code NONE} value
+     */
     public BoardGameModel() {
         for (var i = 0; i < BOARD_SIZE; i++) {
             for (var j = 0; j < BOARD_SIZE; j++) {
@@ -21,62 +31,52 @@ public class BoardGameModel {
         }
     }
 
+
+    /**
+     * @param i the row of the position
+     * @param j is the column of the position
+     * @return the {@code ReadOnlyObjectProperty} of the Square in the given position
+     */
     public ReadOnlyObjectProperty<Square> squareProperty(int i, int j) {
         return board[i][j].getReadOnlyProperty();
     }
 
+    /**
+     * @param i the row of the position
+     * @param j is the column of the position
+     * @return the value of the {@code Square} in the given position
+     */
     public Square getSquare(int i, int j) {
         return board[i][j].get();
     }
 
-    /*public void move(int i, int j) {
-        if (board[i][j].get()==NONE) {
-            board[i][j].set(
-                    switch (board[i][j].get()) {
-                        case NONE -> nextPlayer()==1 ? Square.RED : Square.BLUE;
-                        case RED -> Square.BLUE;
-                        case BLUE -> NONE;
-                    }
-            );
-            System.out.println(winner());
-        } else {
-            System.out.println("Incorrect move");
-        }
-    }
-    */
-
-    public void move(int i, int j) {
-        if (board[i][j].get()==NONE) {
-            board[i][j].set(nextPlayer()==1 ? Square.RED : Square.BLUE);
-            //System.out.println(winner()); //ezek elvileg logolva vannak
-            //System.out.println(isEnd()); //ellenőrzés
-            //ezt a controllerbe kéne átteni, bind-olni az isEndhez
-
-            /*if (isEnd()) {
-                var alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("Game Over");
-                alert.setContentText("Congratulations, you have solved the puzzle!");
-                alert.showAndWait();
-                //resetGame();
-            }
-
-             */
-        } else {
-            System.out.println("Incorrect move");
-        }
-    }
-
-    /*rest game, ennek is a controllerben lesz majd a helye
-    public void resetGame() {
-        for (var i = 0; i < BOARD_SIZE; i++) {
-            for (var j = 0; j < BOARD_SIZE; j++) {
-                board[i][j] = new ReadOnlyObjectWrapper<Square>(NONE);
-            }
-        }
-    }
-
+    /**
+     * Decides if the specified move is a valid move or not.
+     * The move is valid, if nobody made a move on that position before, and the position is at the bottom of the board,
+     * or somebody already made a move to the position right under the given position.
+     *
+     * @param i the row of the position
+     * @param j is the column of the position
+     * @return a boolean, {@code true} if the specified move is valid, {@code false} otherwise.
      */
+    public boolean isValid(int i, int j) {
+        return board[i][j].get() == NONE && (i==4 || board[i+1][j].get()!=NONE) ;
+    }
 
+    /**
+     * Make a move to the given position if it is a valid move.
+     * @param i the row of the position
+     * @param j is the column of the position
+     */
+    public void move(int i, int j) {
+        if (isValid( i, j)) {
+            board[i][j].set(nextPlayer()==1 ? Square.RED : Square.BLUE);
+        }
+    }
+
+    /**
+     * {@return an integer, that shows how many steps have been taken in the game}
+     */
     public int moveCounter() {
         int movesDid = 0;
         for (var i = 0; i < BOARD_SIZE; i++) {
@@ -89,6 +89,10 @@ public class BoardGameModel {
         return movesDid;
     }
 
+    /**
+     * Decides which player will take a move in this turn, blue or red.
+     * @return an integer, 1, if the red player will move in this turn, 2 otherwise.
+     */
     public int nextPlayer() {
         if (moveCounter() % 2 == 0) {
             return 1;
@@ -97,32 +101,63 @@ public class BoardGameModel {
         }
     }
 
+    /**
+     * {@return a boolen, {@code true} if the game is over, {@code false} otherwise}
+     */
     public boolean isEnd() {
-        if (winner() != null ||  moveCounter() == 9) {
+        if (winner() != null ||  moveCounter() == 25) {
             return true;
         } else {
             return false;
         }
     }
 
+    /**
+     * {@return the winner of the game, {@code RED} if the red player won, {@code BLUE} if the blue player won,
+     * null if there is no winner}
+     */
     public Square winner() {
-        if (board[0][0].get() == board[1][1].get() && board[1][1].get() == board[2][2].get() && board[0][0].get() != NONE)
-            //return nextPlayer();
-            return board[0][0].get();
-        if (board[2][0].get() == board[1][1].get() && board[1][1].get() == board[0][2].get() && board[2][0].get() != NONE)
-            //return nextPlayer();
-            return board[2][0].get();
-        for (int i = 0; i < 3; i++)
-            if (board[i][1].get() == board[i][2].get() && board[i][2].get() == board[i][0].get() && board[i][0].get() != NONE)
-                //return nextPlayer();
-                return board[i][1].get();
-        for (int j = 0; j < 3; j++)
-            if (board[0][j].get() == board[1][j].get() && board[1][j].get() == board[2][j].get() && board[0][j].get() != NONE)
-                //return nextPlayer();
-                return board[0][j].get();
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                if (board[i][j].get() == board[i+1][j+1].get() && board[i+1][j+1].get() == board[i+2][j+2].get() &&
+                        board[i+2][j+2].get() == board[i+3][j+3].get() && board[i][j].get() != NONE)  {
+                    return board[i][j].get();
+                }
+            }
+        }
+        for (int i = 0; i < 2; i++) {
+            for (int j = 4; j > 2; j--) {
+                if (board[i][j].get() == board[i+1][j-1].get() && board[i+1][j-1].get() == board[i+2][j-2].get() &&
+                        board[i+2][j-2].get() == board[i+3][j-3].get() && board[i][j].get() != NONE)  {
+                    return board[i][j].get();
+                }
+            }
+        }
+        for (int i = 0; i<BOARD_SIZE; i++) {
+            for (int j = 0; j<2; j++) {
+                if (board[i][j].get() == board[i][j+1].get() && board[i][j+1].get() == board[i][j+2].get() &&
+                        board[i][j+2].get() == board[i][j+3].get() && board[i][j].get() !=NONE) {
+                    return board[i][j].get();
+                }
+            }
+        }
+        for (int i = 0; i<2; i++) {
+            for (int j = 0; j<BOARD_SIZE; j++) {
+                if (board[i][j].get() == board[i+1][j].get() && board[i+1][j].get() == board[i+2][j].get() &&
+                        board[i+2][j].get() == board[i+3][j].get() && board[i][j].get() !=NONE) {
+                    return board[i][j].get();
+                }
+            }
+        }
         return null;
     }
 
+    /**
+     * Returns a {@link String} representation of the {@code BoardGameModel} object.
+     *
+     * @return a String describing the object
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (var i = 0; i < BOARD_SIZE; i++) {

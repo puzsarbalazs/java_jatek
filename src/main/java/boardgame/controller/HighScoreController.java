@@ -1,4 +1,4 @@
-package boardgame;
+package boardgame.controller;
 
 import boardgame.json.GameResult;
 import boardgame.json.GameResultRepository;

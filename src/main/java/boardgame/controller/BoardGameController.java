@@ -1,4 +1,4 @@
-package boardgame;
+package boardgame.controller;
 
 import boardgame.json.GameResult;
 import boardgame.json.GameResultRepository;
@@ -112,7 +112,8 @@ public class BoardGameController {
             alert.showAndWait();
             GameResult gameResult = GameResult.builder()
                     .created(ZonedDateTime.now())
-                    .winner(model.winner().toString())
+                    //.winner(model.winner().toString())
+                    .winner(model.winner() != null ? model.winner().toString() : "DRAW")
                     .steps(model.moveCounter()).build();
             gameResultRepository.addOne(gameResult);
             try {
@@ -173,7 +174,7 @@ public class BoardGameController {
         var col = GridPane.getColumnIndex(square);
         Logger.debug("Click on square ({}, {})", row, col);
         model.move(row, col);
-        Logger.debug(model.toString());
+        Logger.debug("The recent board state is: \n{}", model.toString());
         gameOver.set(model.isEnd());  //próba
     }
 

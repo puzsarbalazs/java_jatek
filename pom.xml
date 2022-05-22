@@ -6,7 +6,7 @@
     <groupId>hu.unideb.inf</groupId>
     <artifactId>tic-tac-toe-game</artifactId>
     <version>1.0</version>
-    <description>Tic-tac-toe game implemented in JavaFX based on the Model-View-Controller (MVC) architectural pattern.</description>
+    <description>4 In A Row game implemented in JavaFX based on the Model-View-Controller (MVC) architectural pattern.</description>
     <developers>
         <developer>
             <id>puzsarbalazs</id>
@@ -26,7 +26,7 @@
         <maven.checkstyle.version>3.1.2</maven.checkstyle.version>
         <maven.surefire.version>3.0.0-M6</maven.surefire.version>
         <jacoco.version>0.8.8</jacoco.version>
-        <exec.mainClass><!-- TODO: the main class of your application that contains the main method --></exec.mainClass>
+        <exec.mainClass>boardgame.Main</exec.mainClass>
         <jackson.version>2.13.1</jackson.version>
     </properties>
     <dependencies>

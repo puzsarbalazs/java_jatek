@@ -27,7 +27,7 @@ public abstract class FileSystemRepository<T> extends JacksonJsonRepository {
     }
 
     /**
-     * {@return the list of objects}
+     * {@return the set of objects}
      */
     public Set<T> getAll() {
         return new HashSet<>(elements);
