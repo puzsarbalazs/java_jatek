@@ -32,5 +32,4 @@ public class GameResult {
      * The amount of steps it took for the winner to win.
      */
     private Integer steps;
-
 }

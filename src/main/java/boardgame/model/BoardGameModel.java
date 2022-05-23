@@ -2,11 +2,8 @@ package boardgame.model;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.scene.control.Alert;
-import org.tinylog.Logger;
 
 import static boardgame.model.Square.NONE;
-import static boardgame.model.Square.RED;
 
 /**
  * Class representing the model of the game.
@@ -30,7 +27,6 @@ public class BoardGameModel {
             }
         }
     }
-
 
     /**
      * @param i the row of the position
@@ -117,7 +113,6 @@ public class BoardGameModel {
      * null if there is no winner}
      */
     public Square winner() {
-
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 if (board[i][j].get() == board[i+1][j+1].get() && board[i+1][j+1].get() == board[i+2][j+2].get() &&
@@ -168,8 +163,6 @@ public class BoardGameModel {
         }
         return sb.toString();
     }
-
-
 
     public static void main(String[] args) {
         var model = new BoardGameModel();

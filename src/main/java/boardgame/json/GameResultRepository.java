@@ -14,7 +14,6 @@ public class GameResultRepository extends FileSystemRepository<GameResult> {
     private static final File LEADERBOARD_FILE = new File(System.getProperty("user.home")
             +File.separator+"leaderboard.json");
 
-
     public GameResultRepository() {
         super(GameResult.class);
         try {
@@ -32,12 +31,9 @@ public class GameResultRepository extends FileSystemRepository<GameResult> {
                     .max()
                     .orElse(0L) + 1L);
         }
-
         return super.addOne(element);
     }
-
     public File getLeaderboardFile() {
         return LEADERBOARD_FILE;
     }
 }
-

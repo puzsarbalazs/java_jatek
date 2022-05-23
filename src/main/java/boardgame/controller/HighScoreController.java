@@ -10,13 +10,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
 import org.tinylog.Logger;
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -25,8 +23,6 @@ import java.time.format.FormatStyle;
 import java.util.Set;
 
 public class HighScoreController {
-
-
     private GameResultRepository gameResultRepository = new GameResultRepository();
 
     @FXML
@@ -53,13 +49,11 @@ public class HighScoreController {
             e.printStackTrace();
         }
         Set<GameResult> highScoreList = gameResultRepository.getAll();
-
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
         steps.setCellValueFactory(new PropertyValueFactory<>("steps"));
         created.setCellValueFactory(new PropertyValueFactory<>("created"));
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         Logger.debug(highScoreList);
-
 
         created.setCellFactory(column -> new TableCell<>() {
             private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
@@ -77,10 +71,8 @@ public class HighScoreController {
 
         ObservableList<GameResult> observableResult = FXCollections.observableArrayList();
         observableResult.addAll(highScoreList);
-
         highScoreTable.setItems(observableResult);
     }
-
 
     @FXML
     private void BackToMenu(ActionEvent event) throws IOException {
@@ -90,5 +82,4 @@ public class HighScoreController {
         stage.setScene(new Scene(root));
         stage.show();
     }
-
 }

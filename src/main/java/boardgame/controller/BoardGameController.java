@@ -3,7 +3,6 @@ package boardgame.controller;
 import boardgame.json.GameResult;
 import boardgame.json.GameResultRepository;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -15,7 +14,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -25,15 +23,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-
 import boardgame.model.BoardGameModel;
-import boardgame.model.Square;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
-
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 public class BoardGameController {
@@ -61,21 +55,12 @@ public class BoardGameController {
         }
     }
 
-    //próba
     private BooleanProperty gameOver = new SimpleBooleanProperty();
 
     private StackPane createSquare(int i, int j) {
         var square = new StackPane();
         square.getStyleClass().add("square");
         var piece = new Circle(50);
-/*
-        piece.fillProperty().bind(Bindings.when(model.squareProperty(i, j).isEqualTo(Square.NONE))
-                .then(Color.TRANSPARENT)
-                .otherwise(Bindings.when(model.squareProperty(i, j).isEqualTo(Square.HEAD))
-                        .then(Color.RED)
-                        .otherwise(Color.BLUE))
-        );
-*/
         piece.fillProperty().bind(
                 new ObjectBinding<Paint>() {
                     {
@@ -96,12 +81,10 @@ public class BoardGameController {
         return square;
     }
 
-    //próba
     private void registerHandlersAndListeners() {
         gameOver.addListener(this::handleGameOver);
     }
 
-    //ez is próba
     private void handleGameOver(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
         if (newValue) {
             var text = model.winner()!=null ? model.winner().toString()+" won the game!" : "It's a draw";
@@ -112,7 +95,6 @@ public class BoardGameController {
             alert.showAndWait();
             GameResult gameResult = GameResult.builder()
                     .created(ZonedDateTime.now())
-                    //.winner(model.winner().toString())
                     .winner(model.winner() != null ? model.winner().toString() : "DRAW")
                     .steps(model.moveCounter()).build();
             gameResultRepository.addOne(gameResult);
@@ -125,13 +107,11 @@ public class BoardGameController {
         }
     }
 
-    //ez is
     private void resetGame() {
         model = new BoardGameModel();
         clearGrid();
         board.getChildren().clear();
         populateGrid();
-        //as
         Logger.info("Restarting the the game");
     }
 
@@ -150,17 +130,17 @@ public class BoardGameController {
         }
     }
 
-    //gombok próba
     private void registerKeyEventHandler() {
         KeyCombination restartKeyCombination = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
         KeyCombination quitKeyCombination = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
         Platform.runLater(() -> board.getScene().setOnKeyPressed(
                 keyEvent -> {
                     if (restartKeyCombination.match(keyEvent)) {
-                        //Logger.debug("Restarting game...");
+                        Logger.debug("Restart key combination is pressed");
                         resetGame();
                     } else if (quitKeyCombination.match(keyEvent)) {
-                        //Logger.debug("Exiting...");
+                        Logger.debug("Quit game key combination is pressed");
+                        Logger.info("Leaving the game");
                         Platform.exit();
                     }
                 }
@@ -175,9 +155,8 @@ public class BoardGameController {
         Logger.debug("Click on square ({}, {})", row, col);
         model.move(row, col);
         Logger.debug("The recent board state is: \n{}", model.toString());
-        gameOver.set(model.isEnd());  //próba
+        gameOver.set(model.isEnd());
     }
-
 
     @FXML
     private void BackToMenu(ActionEvent event) throws IOException {
@@ -187,5 +166,4 @@ public class BoardGameController {
         stage.setScene(new Scene(root));
         stage.show();
     }
-
 }

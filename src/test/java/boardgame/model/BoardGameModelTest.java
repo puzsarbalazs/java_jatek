@@ -7,13 +7,10 @@ import org.junit.jupiter.api.Test;
 import static boardgame.model.Square.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 public class BoardGameModelTest {
     private BoardGameModel board;
     private BoardGameModel testModel2;
     private BoardGameModel testModel3;
-
-
 
     @BeforeEach
     private void setUp() {
@@ -34,13 +31,6 @@ public class BoardGameModelTest {
         testModel2.move(2,1);
         testModel2.move(1,1);
         testModel2.move(1,0);
-    }
-
-    private ReadOnlyObjectWrapper<Square>[][] testBoard1;
-
-
-
-    public void endWithDraw() {
     }
 
     @Test
